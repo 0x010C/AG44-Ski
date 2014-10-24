@@ -1,0 +1,66 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* set body font-size in em (1.4em equiv "14px") */
+  font-size: 1.4em;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+header {
+
+
+h1 {
+  font-size: 3.2rem;
+  font-family: Helvetica, Arial, sans-serif;
+}
+h2 {
+  font-size: 2.8rem;
+  font-family: Helvetica, Arial, sans-serif;
+}
+h3 {
+  font-size: 2.4rem;
+}
+h4 {
+  font-size: 2rem;
+}
+h5 {
+  font-size: 1.8rem;
+}
+h6 {
+  font-size: 1.6rem;
+}
+
+.smaller {
+  font-size: 0.71em;
+}
+.small {
+  font-size: 0.86em;
+}
+.big {
+  font-size: 1.14em;
+}
+.bigger {
+  font-size: 1.29em;
+}
+.biggest {
+  font-size: 1.43em;
+}
+
+em, .italic {
+  font-style: italic;
+}
+strong, .bold {
+  font-weight: bold;
+}
