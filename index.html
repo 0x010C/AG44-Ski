@@ -8,6 +8,13 @@
 		<title>Ski path finder</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="css/style.css" media="all">
+		<script src="js/jquery-1.10.2.js"></script>
+		<script src="js/jquery-ui.js"></script>
+		 <script>
+			$(function() {
+				$( "#carte" ).draggable({ cursor: "move", scroll: false });
+			});
+		</script>
 </head>
 <body>
 	
@@ -15,9 +22,9 @@
 		<h1>Ski path finder</h1>
 	</header>
 
-	<section role="main">
-		<p>
-			<img src="img/pistes.jpg" />
+	<section role="main" id="main">
+		<p id="contour" class="draggable ui-widget-content">
+			<img src="img/pistes.jpg" id="carte" />
 		</p>
 	</section>
 
