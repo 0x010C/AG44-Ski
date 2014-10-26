@@ -12,11 +12,15 @@
 		<script src="js/jquery-ui.js"></script>
 		 <script>
 			$(function() {
-				$( "#carte" ).draggable({ cursor: "move", scroll: false });
+				var left = $("#body").width() - $("#carte").width();
+				var top = $("#body").height() - $("#carte").height() - $("#footer").height();
+				var right = 0;
+				var bottom = 0;
+				$( "#carte" ).draggable({ cursor: "move", scroll: false, containment: [left, top, right, bottom]});
 			});
 		</script>
 </head>
-<body>
+<body id="body">
 	
 	<header role="banner">
 		<h1>Ski path finder</h1>
@@ -28,7 +32,7 @@
 		</p>
 	</section>
 
-	<footer role="contentinfo">
+	<footer role="contentinfo" id="footer">
 		<ul>
 			<li><a href="http://0x010c.fr">par Antoine Lamielle</a></li>
 			<li><a href="#">licence GNU GPL v3</a></li>
