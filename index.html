@@ -10,13 +10,19 @@
 		<link rel="stylesheet" href="css/style.css" media="all">
 		<script src="js/jquery-1.10.2.js"></script>
 		<script src="js/jquery-ui.js"></script>
-		 <script>
-			$(function() {
-				var left = $("#body").width() - $("#carte").width();
+		<script>
+		 	function setDrag() {
+		 		var left = $("#body").width() - $("#carte").width();
 				var top = $("#body").height() - $("#carte").height() - $("#footer").height();
 				var right = 0;
 				var bottom = 0;
 				$( "#carte" ).draggable({ cursor: "move", scroll: false, containment: [left, top, right, bottom]});
+		 	}
+			$(function() {
+				setDrag();
+			});
+			$(window).resize(function() {
+				setDrag();
 			});
 		</script>
 </head>
