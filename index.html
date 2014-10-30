@@ -10,20 +10,52 @@
 		<link rel="stylesheet" href="css/style.css" media="all">
 		<script src="js/jquery-1.10.2.js"></script>
 		<script src="js/jquery-ui.js"></script>
+		<script src="js/jquery-maphilight.js"></script>
 		<script>
+			$.fn.maphilight.defaults = {
+				fill: true,
+				fillColor: '000000',
+				fillOpacity: 0.2,
+				stroke: true,
+				strokeColor: '00ff00',
+				strokeOpacity: 1,
+				strokeWidth: 1,
+				fade: true,
+				alwaysOn: false,
+				neverOn: false,
+				groupBy: false,
+				wrapClass: true,
+				shadow: false,
+				shadowX: 0,
+				shadowY: 0,
+				shadowRadius: 6,
+				shadowColor: '000000',
+				shadowOpacity: 0.8,
+				shadowPosition: 'outside',
+				shadowFrom: false
+			}
 		 	function setDrag() {
 		 		var left = $("#body").width() - $("#carte").width();
 				var top = $("#body").height() - $("#carte").height() - $("#footer").height();
 				var right = 0;
 				var bottom = 0;
-				$( "#carte" ).draggable({ cursor: "move", scroll: false, containment: [left, top, right, bottom]});
+				$( "#carte" ).draggable({ cursor: "move", scroll: false, containment: [left, top, right, bottom], zIndex: 100 });
 		 	}
 			$(function() {
 				setDrag();
+				$('#carte').maphilight();
+
+				$('#a1').click(function(e) {
+				    e.preventDefault();
+				    var data = $('#a1').data('maphilight') || {};
+            		data.alwaysOn = !data.alwaysOn;
+					$('#a1').data('maphilight', {alwaysOn: data.alwaysOn}).trigger('alwaysOn.maphilight');
+				});
 			});
 			$(window).resize(function() {
 				setDrag();
 			});
+			
 		</script>
 </head>
 <body id="body">
@@ -34,17 +66,28 @@
 
 	<section role="main" id="main">
 		<p id="contour" class="draggable ui-widget-content">
-			<img src="img/pistes.jpg" id="carte" />
+			<img src="img/pistes.jpg" id="carte" usemap="#map"/>
+			<map name="map">
+				<area id="a1" shape="rect" coords="480,71,581,118" href="#" />
+			</map>
 		</p>
 	</section>
 
 	<footer role="contentinfo" id="footer">
 		<ul>
 			<li><a href="http://0x010c.fr">par Antoine Lamielle</a></li>
-			<li><a href="#">licence GNU GPL v3</a></li>
+			<li><a href="javascript:alert('hey, listen :-)')">licence GNU GPL v3</a></li>
 			<li><a href="https://github.com/0x010C/AG44-Ski/">fork me on Github</a></li>
 		</ul>
 	</footer>
 
 </body>
 </html>
+<!--
+Pour colorier une area a distance
+$('#lien externe').mouseover(function(e) {
+    $('#area interne').mouseover();
+}).mouseout(function(e) {
+    $('#area interne').mouseout();
+}).click(function(e) { e.preventDefault(); });
+-->

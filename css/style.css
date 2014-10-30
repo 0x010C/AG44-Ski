@@ -5,7 +5,7 @@
 
 @font-face {
 	font-family: custom2;
-	src: url('SkidooMedium_RH.ttf');
+	src: url('Pacifico.woff');
 }
 
 * {
@@ -36,15 +36,22 @@ body {
 header {
 	background-color: #5c1b35;
 	position: absolute;
-	top: 0;
+	top: -7px;
 	left: 2%;
-	color: #e2edb7;
-	text-shadow: rgba(226, 237, 183, 0.4) 0px 0px 7px;
-	padding: 10px;
+	padding-right: 6px;
+	padding-bottom: 2px;
 	
-	border-bottom-left-radius: 30px;
-	border-bottom-right-radius: 30px;
+	border-bottom-left-radius: 22px;
+	border-bottom-right-radius: 22px;
+	
+	z-index: 200;
 
+}
+
+header h1 {
+	color: #e2edb7;
+	font: 2.8em custom2, sans-serif;
+	text-shadow: rgba(226, 237, 183, 0.4) 0px 0px 7px;
 }
 
 /*
@@ -62,6 +69,10 @@ section p {
 
 section p img {
 	min-width: 100%;
+	z-index: 100;
+}
+area {
+	background: red;
 }
 
 /*
@@ -99,10 +110,6 @@ footer ul li a:hover {
 /*
  * TITLES
  */
-h1 {
-	font-size: 2.8rem;
-	font-family: custom2, sans-serif;
-}
 h2 {
   font-size: 2.8rem;
   font-family: Helvetica, Arial, sans-serif;
