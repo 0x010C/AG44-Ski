@@ -39,11 +39,16 @@
 
 		<!-- Initialisation de jQuery-ui draggable -->
 		<script>
-			var zoom = 1;
-			var posMarkerX = [];
-			var posMarkerY = [];
+			//Const
+			var imgWidth = 3480;
+			var imgHeight = 2000;
 			var offsetX = -27/2;
 			var offsetY = -40;
+
+			var zoom = 1;
+			var facteur = $("#image").width()/imgWidth;
+			var posMarkerX = [];
+			var posMarkerY = [];
 
 		 	function setDrag() {
 		 		var left = $("#body").width() - $("#image").width()*zoom;
@@ -54,6 +59,7 @@
 		 	}
 			$(window).resize(function() {
 				setDrag();
+				facteur = $("#image").width()/imgWidth;
 			});
 			$(function() {
 				setDrag();
@@ -89,8 +95,8 @@
 		<script>
 			function updateMarker() {
 				$(".marker").each(function(i) {
-					$(this).css('left', posMarkerX[i]*zoom + offsetX + $("#image").position().left);
-					$(this).css('top', posMarkerY[i]*zoom + offsetY + $("#image").position().top);
+					$(this).css('left', posMarkerX[i]*zoom*facteur + offsetX + $("#image").position().left);
+					$(this).css('top', posMarkerY[i]*zoom*facteur + offsetY + $("#image").position().top);
 				});
 			}
 		 	function addMarker(x, y, icon, text) {
