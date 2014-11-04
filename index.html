@@ -22,7 +22,7 @@
 
 		<section role="main" id="main">
 			<div id="container">
-				<img src="img/pistes.jpg" id="image" usemap="#map" />
+				<img src="img/pistes2.jpg" id="image" usemap="#map" />
 				<map name="map">
 					<area id="a1" shape="rect" coords="480,71,581,118" href="#" />
 				</map>
@@ -42,6 +42,8 @@
 			var zoom = 1;
 			var posMarkerX = [];
 			var posMarkerY = [];
+			var offsetX = -27/2;
+			var offsetY = -40;
 
 		 	function setDrag() {
 		 		var left = $("#body").width() - $("#image").width()*zoom;
@@ -87,13 +89,11 @@
 		<script>
 			function updateMarker() {
 				$(".marker").each(function(i) {
-					$(this).css('left', posMarkerX[i]*zoom + $("#image").position().left);
-					$(this).css('top', posMarkerY[i]*zoom + $("#image").position().top);
+					$(this).css('left', posMarkerX[i]*zoom + offsetX + $("#image").position().left);
+					$(this).css('top', posMarkerY[i]*zoom + offsetY + $("#image").position().top);
 				});
 			}
 		 	function addMarker(x, y, icon, text) {
-		 		x = x-(27/2);
-		 		y = y-40;
 		 		$("#container").append('<span style="left: '+y+'px; top: '+x+'px; position: absolute;" title="" class="marker black">'+icon+'</span>');
 		 		posMarkerX.push(x);
 				posMarkerY.push(y);

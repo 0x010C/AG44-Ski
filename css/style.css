@@ -41,6 +41,7 @@ header {
 	left: 2%;
 	padding-right: 6px;
 	padding-bottom: 2px;
+	padding-left: 10px;
 	
 	border-bottom-left-radius: 22px;
 	border-bottom-right-radius: 22px;
@@ -58,7 +59,7 @@ header h1 {
 /*
  * CORPS
  */
-section, .viewport {
+section {
 	background: #498379;
 	overflow: hidden;
 	width: 100%;
@@ -72,8 +73,8 @@ section div {
 	background: #b7c775;
 }
 
-section div img, .viewport img {
-	min-width: 100%;
+section div img {
+	width: 100%;
 	z-index: 100;
 	display: hidden;
 }
