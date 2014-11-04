@@ -12,13 +12,7 @@
 		<!-- Inclusion de jQuery et jQuery-ui -->
 		<script src="js/jquery-1.10.2.js"></script>
 		<script src="js/jquery-ui.js"></script>
-		<!-- Inclusion des dépendances de imgNotes -->
-		<script src="js/imgNotes/jquery.fs.zoetrope.min.js"></script>
-		<script src="js/imgNotes/toe.min.js"></script>
-		<script src="js/imgNotes/jquery.mousewheel.min.js"></script>
-		<script src="js/imgNotes/imgViewer.min.js"></script>
-		<!-- Inclusion de imgNotes -->
-		<script src="js/imgNotes/imgNotes.js"></script>
+		<script src="js/jquery-mousewheel.js"></script>
 	</head>
 	<body id="body">
 	
@@ -27,10 +21,12 @@
 		</header>
 
 		<section role="main" id="main">
-			<div id="imgdiv">
-				<img src="img/pistes.jpg" id="image" />
+			<div id="container">
+				<img src="img/pistes.jpg" id="image" usemap="#map" />
+				<map name="map">
+					<area id="a1" shape="rect" coords="480,71,581,118" href="#" />
+				</map>
 			</div>
-			<div id=txt></div>
 		</section>
 
 		<footer role="contentinfo" id="footer">
@@ -41,60 +37,18 @@
 			</ul>
 		</footer>
 
-		<!-- Activation de imgNotes -->
-		<script type="text/javascript">
-			;(function($) {
-				$(document).ready(function() {
-					var $img = $("#image").imgNotes({
-						onShow: $.noop,
-						onAdd: function() {
-									this.options.vAll = "bottom";
-									this.options.hAll = "middle";
-									var elem = $(document.createElement('span')).addClass("marker black").html(this.noteCount).attr("title", "");
-									var self = this;
-									$(elem).tooltip({
-										content: function() {
-											return $(elem).data("note");
-										}
-								});
-								return elem;
-						},
-						zoomable: false,
-						canEdit: false
-					});
-					$img.imgNotes("import", [{x: "0.3", y:"0.3", note:"AFL Grand Final Trophy"}, {x: "0.824", y: "0.593", note: "Fluffy microphone"}]);
-				});
-			})(jQuery);
-			
-			var posMarkerX = [];
-			var posMarkerY = [];
-			function checkMarker() {
-				if($("#image").imgNotes("count") > posMarkerX.length)
-				{
-					$(".marker").each(function(i) {
-						if(i >= posMarkerX.length)
-						{
-							posMarkerX.push($(this).position().left);
-							posMarkerY.push($(this).position().top);
-						}
-					});
-				}
-			}
-			function updateMarker() {
-				$(".marker").each(function(i) {
-					$(this).css('left', $(".viewport img").position().left + posMarkerX[i]);
-					$(this).css('top', $(".viewport img").position().top + posMarkerY[i]);
-				});
-			}
-		</script>
 		<!-- Initialisation de jQuery-ui draggable -->
 		<script>
+			var zoom = 1;
+			var posMarkerX = [];
+			var posMarkerY = [];
+
 		 	function setDrag() {
-		 		var left = $("#body").width() - $("#image").width();
-				var top = $("#body").height() - $("#image").height() - $("#footer").height();
+		 		var left = $("#body").width() - $("#image").width()*zoom;
+				var top = $("#body").height() - $("#image").height()*zoom - $("#footer").height();
 				var right = 0;
 				var bottom = 0;
-				$( ".viewport img" ).draggable({ cursor: "move", scroll: false, containment: [left, top, right, bottom], start: function(){checkMarker();},drag: function(){updateMarker();}});
+				$('#image').draggable({ cursor: "move", scroll: false, containment: [left, top, right, bottom], drag: function(){updateMarker();}});
 		 	}
 			$(window).resize(function() {
 				setDrag();
@@ -103,12 +57,46 @@
 				setDrag();
 			});
 		</script>
+		<!-- Gestion du zoom -->
+		<script>
+			function updateZoom() {
+				$('#image').css('transform', 'scale('+zoom+')');
+				updateMarker();
+				if($('#image').position().left > 0)
+					$('#image').css('left', '0');
+				if($('#image').position().top > 0)
+					$('#image').css('top', '0');
+				if($('#image').position().left < $("#body").width() - $("#image").width()*zoom)
+					$('#image').css('left', ''+($("#body").width() - $("#image").width()*zoom)+'');
+				if($('#image').position().top < $("#body").height() - $("#image").height()*zoom - $("#footer").height())
+					$('#image').css('top', ''+($("#body").height() - $("#image").height()*zoom - $("#footer").height())+'');
+				setDrag();
+			}
+
+			$(function() {
+				$('#image').mousewheel(function(event, delta) {
+					 if (event.deltaY > 0)
+                        zoom += 0.1;
+                    else if (event.deltaY < 0 && zoom > 1)
+                        zoom -= 0.1;
+					updateZoom();
+				});
+			});
+		</script>
 		<!-- Gestion dynamique des markers -->
 		<script>
+			function updateMarker() {
+				$(".marker").each(function(i) {
+					$(this).css('left', posMarkerX[i]*zoom + $("#image").position().left);
+					$(this).css('top', posMarkerY[i]*zoom + $("#image").position().top);
+				});
+			}
 		 	function addMarker(x, y, icon, text) {
-		 		$("#image").imgNotes("addNote", x/$("#image").width(), y/$("#image").height(),text);
-		 		$(".marker").last().text(icon);
-		 		checkMarker();
+		 		x = x-(27/2);
+		 		y = y-40;
+		 		$("#container").append('<span style="left: '+y+'px; top: '+x+'px; position: absolute;" title="" class="marker black">'+icon+'</span>');
+		 		posMarkerX.push(x);
+				posMarkerY.push(y);
 		 		updateMarker();
 		 	}
 		 	function addStart(x, y) {
