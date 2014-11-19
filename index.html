@@ -8,6 +8,7 @@
 		<title>Ski path finder</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="css/style.css" media="all">
+		<link rel="stylesheet" href="css/jquery-ui.css" media="all">
 
 		<!-- Inclusion de jQuery et jQuery-ui -->
 		<script src="js/jquery-1.10.2.js"></script>
@@ -36,10 +37,12 @@
 			</ul>
 		</footer>
 
+		<div id="infobox"></div>
 		<div id="get" style="display: none;"></div>
 
 		<!-- Gestion de la carte -->
 		<script>
+			var line = [];
 			/* Gestion du zoom */
 			function Zoom(parent) {
 				this.parent = parent;
@@ -76,8 +79,22 @@
 						$(this).css('top', image.marqueurs.posMarkerY[i]*image.zoom.val*image.marqueurs.factor + image.offsetY + $("#image").position().top);
 					});
 				}
-			 	this.add = function(x, y, icon, text) {
-			 		$("#container").append('<span style="left: '+y+'px; top: '+x+'px; position: absolute;" title="" class="marker black">'+icon+'<span class="info">'+text+'</span></span>');
+			 	this.add = function(x, y, id, icon) {
+			 		$("#container").append('<span style="left: '+y+'px; top: '+x+'px; position: absolute;" title="" class="marker black" id="'+id+'">'+icon+'</span>');
+
+			 		$("#container span:last").hover(
+						function() {
+							var m = this;
+							$('#infobox').empty();
+							$("#infobox").html("<h3>Nom</h3><p>"+line[parseInt($(this).attr('id'))-1][1]+"</p><h3>Altitude</h3><p>"+line[parseInt($(this).attr('id'))-1][2]+"</p>");
+							$("#infobox").dialog({modal: false,resizable: false,position: { my: "left bottom", at: "right top", of: m}, width:100});
+							$("#infobox").closest(".ui-dialog").find(".ui-dialog-titlebar:first").hide();
+							//alert("In: "+line[parseInt($(this).attr('id'))-1][1]);
+						}, function() {
+							//alert("Out: "+line[parseInt($(this).attr('id'))-1][1]);
+							$("#infobox").dialog("close");
+						}
+					);
 			 		this.posMarkerX.push(x);
 					this.posMarkerY.push(y);
 			 		this.update();
@@ -127,18 +144,16 @@
 		<script>
 			function lecture() {
 				$("#get").load("data.txt",function(data){
-					var line = [];
 					var reg=new RegExp("[\n]+", "g");
 					var tmp=data.split(reg);
 					reg = new RegExp("[\t]+", "g");
 					for(var i=1; i<parseInt(tmp[0]); i++) {
 						line.push(tmp[i].split(reg));
-						image.marqueurs.add(parseInt(line[i-1][3]), parseInt(line[i-1][4]), line[i-1][0], line[i-1][1]);
+						image.marqueurs.add(parseInt(line[i-1][3]), parseInt(line[i-1][4]), line[i-1][0], line[i-1][0]);
 					}
 				});
 			}
 			function err() {
-				$.ajaxError()
 			}
 		</script>
 
