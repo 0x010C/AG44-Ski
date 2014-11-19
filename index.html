@@ -15,7 +15,6 @@
 		<script src="js/jquery-mousewheel.js"></script>
 	</head>
 	<body id="body">
-	
 		<header role="banner">
 			<h1>Ski path finder</h1>
 		</header>
@@ -31,12 +30,15 @@
 
 		<footer role="contentinfo" id="footer">
 			<ul>
-				<li><a href="http://0x010c.fr">par Antoine Lamielle</a></li>
+				<li><a href="javascript:lecture();">par Antoine Lamielle</a></li>
 				<li><a href="javascript:image.marqueurs.addStart(Number(prompt('x = ', '')),Number(prompt('y = ', '')));">licence GNU GPL v3</a></li>
-				<li><a href="https://github.com/0x010C/AG44-Ski/">fork me on Github</a></li>
+				<li><a href="javascript:err();">fork me on Github</a></li>
 			</ul>
 		</footer>
+		<div id="get" style="display: none;"></div>
 
+
+		<!-- Gestion de la carte -->
 		<script>
 			/* Gestion du zoom */
 			function Zoom(parent) {
@@ -119,8 +121,43 @@
 			 	}
 			
 			}
+		</script>
 
-			/* Lancement des modules */
+		<!-- Lecture des données -->
+		<script>
+			function lecture() {
+				$.get("data.txt",{function(data){
+					alert(data);
+				});
+			}
+			function err() {
+				$.ajaxError()
+			}
+		</script>
+
+		<!-- Gestion des évènements -->
+		<script>
+			var select = 0; //0: départ ; 1: intermédiaire ; 2: arrivée
+			
+			function selection(numPoint) {
+				var x = 0;
+				var y = 0;
+				switch(select) {
+					case (0):
+						image.marqueurs.addStart(x, y);
+						break;
+					case (1):
+						image.marqueurs.addInt(x, y);
+						break;
+					case (2):
+						image.marqueurs.addEnd(x, y);
+						break;
+				}
+			}
+		</script>
+
+		<!-- Lancement des modules -->
+		<script>
 			var image = new Image();
 
 			$(function() {
