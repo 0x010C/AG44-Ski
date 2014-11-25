@@ -73,8 +73,8 @@ section div {
 	background: #b7c775;
 }
 
-section div img {
-	width: 100%;
+section img {
+	/*width: 100%;*/
 	z-index: 50;
 	display: hidden;
 }
@@ -118,7 +118,7 @@ footer ul li a:hover {
 /*
  * MARQUEUR
  */
-.marker{
+#container span {
 	width: 27px;
 	height: 40px;
 	position: absolute;
