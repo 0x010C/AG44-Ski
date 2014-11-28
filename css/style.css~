@@ -78,8 +78,6 @@ aside h1 {
 aside label {
 	display: inline-block;
 	margin-right: 5px;
-	color : #f6f6f6;
-	
 }
 aside option {
 	display: block;

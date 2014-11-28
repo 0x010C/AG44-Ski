@@ -200,8 +200,8 @@
 				image.setDrag();
 				image.setWheel();
 				lecture();
-				$("#listeDepart").selectmenu();
-				$("#listeArrivee").selectmenu();
+				/*$("#listeDepart").selectmenu();
+				$("#listeArrivee").selectmenu();*/
 			});
 
 			$(window).resize(function() {
