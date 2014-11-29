@@ -81,9 +81,8 @@ aside label {
 	color : #f6f6f6;
 	
 }
-aside option {
-	display: block;
-	max-height: 5px;
+aside select {
+	width: 220px;
 }
 
 /*
@@ -105,9 +104,8 @@ section div {
 }
 
 section img {
-	/*width: 100%;*/
+	width: 100%;
 	z-index: 50;
-	display: hidden;
 }
 area {
 	background: red;
