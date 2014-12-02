@@ -22,19 +22,19 @@
 		
 		<aside>
 			<h1>Path</h1>
-			<label for="listeDepart">Start</label>
+			<label for="listeDepart"><img src="img/iconD.png" /></label>
 			<select name="listeDepart" id="listeDepart">
-			</select><br />
-			<label for="listeArrivee">End</label>
+				<option value="0"></option>
+			</select>
+			<br />
+			<label for="listeArrivee"><img src="img/iconA.png" /></label>
 			<select name="listeArrivee" id="listeArrivee">
+				<option value="0"></option>
 			</select>
 		</aside>
 
 		<section role="main" id="main">
-			<img src="img/pistes2.jpg" id="image" usemap="#map" />
-			<map name="map">
-				<area id="5" shape="rect" coords="750,700,900,850" href="#" />
-			</map>
+			<img src="img/pistes2.jpg" id="image" />
 			<div id="container">
 			</div>
 		</section>
@@ -42,8 +42,8 @@
 		<footer role="contentinfo" id="footer">
 			<ul>
 				<li><a href="javascript:lecture();">par Antoine Lamielle</a></li>
-				<li><a href="javascript:image.marqueurs.addStart(Number(prompt('x = ', '')),Number(prompt('y = ', '')));">licence GNU GPL v3</a></li>
-				<li><a href="javascript:image.marqueurs.removeLast();">fork me on Github</a></li>
+				<li><a href="javascript:image.marqueurs.addStart(Number(prompt('x = ', '')),Number(prompt('y = ', '')),5);">licence GNU GPL v3</a></li>
+				<li><a href="javascript:image.marqueurs.removeStart();">fork me on Github</a></li>
 			</ul>
 		</footer>
 
@@ -52,7 +52,6 @@
 
 		<!-- Gestion de la carte -->
 		<script>
-			var line = [];
 			/* Gestion du zoom */
 			function Zoom(parent) {
 				this.parent = parent;
@@ -107,19 +106,63 @@
 					this.posMarkerY.push(y);
 			 		this.update();
 			 	}
-			 	this.addStart = function(x, y) {
-			 		this.add(x, y, 5, "D");
+			 	this.addStart = function(x, y, id) {
+			 		this.add(x, y, id, "D");
 			 	}
-			 	this.addEnd = function(x, y) {
-			 		this.add(x, y, "A", "Arrivée");
+			 	this.addEnd = function(x, y, id) {
+			 		this.add(x, y, id, "A");
 			 	}
-			 	this.addInt = function(x, y) {
-			 		this.add(x, y, "I", "Intermédiaire");
+			 	this.removeInt = function() {
+			 		$("#container span").each(function(i) {
+			 			$(this).remove();
+				 		image.marqueurs.posMarkerX.pop();
+				 		image.marqueurs.posMarkerY.pop();
+			 		});
+			 		if(parseInt($('#listeDepart option:selected').attr("value")) > 0)
+						image.marqueurs.addStart(line[parseInt($('#listeDepart option:selected').attr("value"))-1][3],line[parseInt($('#listeDepart option:selected').attr("value"))-1][4], parseInt($('#listeDepart option:selected').attr("value")));
+			 		if(parseInt($('#listeArrivee option:selected').attr("value")) > 0)
+						image.marqueurs.addEnd(line[parseInt($('#listeArrivee option:selected').attr("value"))-1][3],line[parseInt($('#listeArrivee option:selected').attr("value"))-1][4], parseInt($('#listeArrivee option:selected').attr("value")));
 			 	}
 			 	this.removeLast = function() {
 			 		this.posMarkerX.pop();
 			 		this.posMarkerY.pop();
 			 		$("#container span:last").remove();
+			 		this.update();
+			 	}
+			 	this.removeStart = function() {
+			 		var pos = -1;
+			 		$("#container span").each(function(i) {
+			 			if($(this).text() == "D") {
+			 				pos = i;
+			 				$(this).remove();
+			 			}
+			 		});
+			 		if(pos != -1) {
+				 		for(i=pos; i<this.posMarkerX.length;i++) {
+				 			this.posMarkerX[i] = this.posMarkerX[i+1];
+				 			this.posMarkerY[i] = this.posMarkerY[i+1];
+				 		}
+				 		this.posMarkerX.pop();
+				 		this.posMarkerY.pop();
+			 		}
+			 		this.update();
+			 	}
+			 	this.removeEnd = function() {
+			 		var pos = -1;
+			 		$("#container span").each(function(i) {
+			 			if($(this).text() == "A") {
+			 				pos = i;
+			 				$(this).remove();
+			 			}
+			 		});
+			 		if(pos != -1) {
+				 		for(i=pos; i<this.posMarkerX.length;i++) {
+				 			this.posMarkerX[i] = this.posMarkerX[i+1];
+				 			this.posMarkerY[i] = this.posMarkerY[i+1];
+				 		}
+				 		this.posMarkerX.pop();
+				 		this.posMarkerY.pop();
+			 		}
 			 		this.update();
 			 	}
 			}
@@ -156,38 +199,123 @@
 
 		<!-- Lecture des données -->
 		<script>
+			var line = [];
+			var connections = [];
 			function lecture() {
 				$("#get").load("data.txt",function(data){
+					var i;
 					var reg=new RegExp("[\n]+", "g");
 					var tmp=data.split(reg);
 					reg = new RegExp("[\t]+", "g");
-					for(var i=1; i<parseInt(tmp[0]); i++) {
+					for(i=1; i<parseInt(tmp[0])+1; i++) {
 						line.push(tmp[i].split(reg));
-						$("#"+i).hover(function(){image.marqueurs.add(parseInt(line[parseInt($(this).attr('id'))-1][3]), parseInt(line[parseInt($(this).attr('id'))-1][4]), line[parseInt($(this).attr('id'))-1][0], line[parseInt($(this).attr('id'))-1][0]);}, function(){image.marqueurs.removeLast()});
-						$("#listeDepart").append('<option>'+line[i-1][1]+'</option>');
-						$("#listeArrivee").append('<option>'+line[i-1][1]+'</option>');
+						$("#listeDepart").append('<option value="'+line[i-1][0]+'">'+line[i-1][1]+'</option>');
+						$("#listeArrivee").append('<option value="'+line[i-1][0]+'">'+line[i-1][1]+'</option>');
+					}
+					i++;
+					for(;i<tmp.length-1;i++)
+						connections.push(tmp[i].split(reg));
+					for(i=0; i<connections.length; i++) {
+						switch(connections[i][2]) {
+							case "V":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])-1][2]) - parseInt(line[parseInt(connections[i][4])-1][2]))/20;
+								break;
+							case "B":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])-1][2]) - parseInt(line[parseInt(connections[i][4])-1][2]))/25;
+								break;
+							case "R":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])-1][2]) - parseInt(line[parseInt(connections[i][4])-1][2]))*3/100;
+								break;
+							case "N":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])-1][2]) - parseInt(line[parseInt(connections[i][4])-1][2]))/50;
+								break;
+							case "KL":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])-1][2]) - parseInt(line[parseInt(connections[i][4])-1][2]))/600;
+								break;
+							case "SURF":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])-1][2]) - parseInt(line[parseInt(connections[i][4])-1][2]))/10;
+								break;
+							case "TPH":
+								connections[i][5] = 4 + (parseInt(line[parseInt(connections[i][4])-1][2]) - parseInt(line[parseInt(connections[i][3])-1][2]))/50;
+								break;
+							case "TC":
+								connections[i][5] = 2 + (parseInt(line[parseInt(connections[i][4])-1][2]) - parseInt(line[parseInt(connections[i][3])-1][2]))*3/100;
+								break;
+							case "TSD":
+								connections[i][5] = 1 + (parseInt(line[parseInt(connections[i][4])-1][2]) - parseInt(line[parseInt(connections[i][3])-1][2]))*3/100;
+								break;
+							case "TS":
+								connections[i][5] = 1 + (parseInt(line[parseInt(connections[i][4])-1][2]) - parseInt(line[parseInt(connections[i][3])-1][2]))/25;
+								break;
+							case "TK":
+								connections[i][5] = 1 + (parseInt(line[parseInt(connections[i][4])-1][2]) - parseInt(line[parseInt(connections[i][3])-1][2]))/25;
+								break;
+							case "BUS":
+								if(parseInt(connections[i][3]) == 7 || parseInt(connections[i][4]) == 7)
+									connections[i][5] = 40;
+								else
+									connections[i][5] = 30;
+								break;
+						}
 					}
 				});
 			}
 		</script>
 
-		<!-- Gestion des évènements -->
+		<!-- Calcul du trajet -->
 		<script>
-			var select = 0; //0: départ ; 1: intermédiaire ; 2: arrivée
-			
-			function selection(numPoint) {
-				var x = 0;
-				var y = 0;
-				switch(select) {
-					case (0):
-						image.marqueurs.addStart(x, y);
-						break;
-					case (1):
-						image.marqueurs.addInt(x, y);
-						break;
-					case (2):
-						image.marqueurs.addEnd(x, y);
-						break;
+			function calculate() {
+				if(parseInt($('#listeDepart option:selected').attr("value")) != 0 && parseInt($('#listeArrivee option:selected').attr("value")) != 0) {
+					$( "#listeDepart" ).selectmenu( "disable" );
+					$( "#listeArrivee" ).selectmenu( "disable" );
+					
+					removeInt();
+					
+					var aVisiter = [];
+					var found = false;
+					var i;
+					var courant;
+
+					for(i=0; i<line.length; i++) {
+						line[i][6] = 999999;
+						line[i][7] = 0;
+					}
+					line[parseInt($('#listeDepart option:selected').attr("value"))-1][6] = 0;
+					aVisiter.unshift(parseInt($('#listeDepart option:selected').attr("value")));
+					while(aVisiter.length != 0 && found == false) {
+						courant = aVisiter.pop();
+						for(i=0; i<connections.length; i++) {
+							if(parseInt(connections[i][3]) == courant) {
+								//alert(connections[i][4]+" && "+connections[i][3]+" ## "+line[parseInt(connections[i][4])-1][6]+" && "+line[parseInt(connections[i][3])-1][6]+" && "+connections[i][5]);
+								if(parseInt(line[parseInt(connections[i][4])-1][6]) > line[parseInt(connections[i][3])-1][6] + connections[i][5]) {
+
+									line[parseInt(connections[i][4])-1][6] = line[parseInt(connections[i][3])-1][6] + connections[i][5];
+									line[parseInt(connections[i][4])-1][7] = courant;
+									aVisiter.unshift(parseInt(connections[i][4]));
+								}
+							}
+						}
+					}
+					
+					if(line[parseInt($('#listeArrivee option:selected').attr("value"))-1][7] == 0)
+						alert("Aucun chemin n'a été trouvé entre les deux points");
+					else {
+						courant = parseInt($('#listeArrivee option:selected').attr("value"));
+						i = -2;
+						while(courant != 0) {
+							courant = line[courant-1][7];
+							i++;
+						}
+						courant = line[parseInt($('#listeArrivee option:selected').attr("value"))-1][7];
+						while(courant != 0 && i > 0) {
+							image.marqueurs.add(line[courant-1][3], line[courant-1][4], courant, i--);
+							courant = line[courant-1][7];
+						}
+						courant = parseInt($('#listeArrivee option:selected').attr("value"));
+					}
+					
+					$( "#listeDepart" ).selectmenu( "enable" );
+					$( "#listeArrivee" ).selectmenu( "enable" );
 				}
 			}
 		</script>
@@ -200,8 +328,18 @@
 				image.setDrag();
 				image.setWheel();
 				lecture();
-				/*$("#listeDepart").selectmenu();
-				$("#listeArrivee").selectmenu();*/
+				$("#listeDepart").selectmenu({select: function( event, ui ) {
+					image.marqueurs.removeStart();
+					if(parseInt($('#listeDepart option:selected').attr("value")) > 0)
+						image.marqueurs.addStart(line[parseInt($('#listeDepart option:selected').attr("value"))-1][3],line[parseInt($('#listeDepart option:selected').attr("value"))-1][4], parseInt($('#listeDepart option:selected').attr("value")));
+					calculate();
+				}});
+				$("#listeArrivee").selectmenu({select: function( event, ui ) {
+					image.marqueurs.removeEnd();
+					if(parseInt($('#listeArrivee option:selected').attr("value")) > 0)
+						image.marqueurs.addEnd(line[parseInt($('#listeArrivee option:selected').attr("value"))-1][3],line[parseInt($('#listeArrivee option:selected').attr("value"))-1][4], parseInt($('#listeArrivee option:selected').attr("value")));
+					calculate();
+				}});
 			});
 
 			$(window).resize(function() {
