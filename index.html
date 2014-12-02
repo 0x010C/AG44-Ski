@@ -52,7 +52,6 @@
 
 		<!-- Gestion de la carte -->
 		<script>
-			var line = [];
 			/* Gestion du zoom */
 			function Zoom(parent) {
 				this.parent = parent;
@@ -200,31 +199,100 @@
 
 		<!-- Lecture des données -->
 		<script>
+			var line = [];
+			var connections = [];
 			function lecture() {
 				$("#get").load("data.txt",function(data){
+					var i;
 					var reg=new RegExp("[\n]+", "g");
 					var tmp=data.split(reg);
 					reg = new RegExp("[\t]+", "g");
-					for(var i=1; i<parseInt(tmp[0]); i++) {
+					for(i=1; i<parseInt(tmp[0])+1; i++) {
 						line.push(tmp[i].split(reg));
-						
 						$("#listeDepart").append('<option value="'+line[i-1][0]+'">'+line[i-1][1]+'</option>');
 						$("#listeArrivee").append('<option value="'+line[i-1][0]+'">'+line[i-1][1]+'</option>');
+					}
+					i++;
+					for(;i<tmp.length-1;i++)
+						connections.push(tmp[i].split(reg));
+					for(i=0; i<connections.length; i++) {
+						switch(connections[i][2]) {
+							case "V":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])][2]) - parseInt(line[parseInt(connections[i][4])][2]))/20;
+								break;
+							case "B":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])][2]) - parseInt(line[parseInt(connections[i][4])][2]))/25;
+								break;
+							case "R":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])][2]) - parseInt(line[parseInt(connections[i][4])][2]))*3/100;
+								break;
+							case "N":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])][2]) - parseInt(line[parseInt(connections[i][4])][2]))/50;
+								break;
+							case "KL":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])][2]) - parseInt(line[parseInt(connections[i][4])][2]))/600;
+								break;
+							case "SURF":
+								connections[i][5] = (parseInt(line[parseInt(connections[i][3])][2]) - parseInt(line[parseInt(connections[i][4])][2]))/10;
+								break;
+							case "TPH":
+								connections[i][5] = 4 + (parseInt(line[parseInt(connections[i][4])][2]) - parseInt(line[parseInt(connections[i][3])][2]))/50;
+								break;
+							case "TC":
+								connections[i][5] = 2 + (parseInt(line[parseInt(connections[i][4])][2]) - parseInt(line[parseInt(connections[i][3])][2]))*3/100;
+								break;
+							case "TSD":
+								connections[i][5] = 1 + (parseInt(line[parseInt(connections[i][4])][2]) - parseInt(line[parseInt(connections[i][3])][2]))*3/100;
+								break;
+							case "TS":
+								connections[i][5] = 1 + (parseInt(line[parseInt(connections[i][4])][2]) - parseInt(line[parseInt(connections[i][3])][2]))/25;
+								break;
+							case "TK":
+								connections[i][5] = 1 + (parseInt(line[parseInt(connections[i][4])][2]) - parseInt(line[parseInt(connections[i][3])][2]))/25;
+								break;
+							case "BUS":
+								if(parseInt(connections[i][3]) == 7 || parseInt(connections[i][4]) == 7)
+									connections[i][5] = 40;
+								else
+									connections[i][5] = 30;
+								break;
+						}
 					}
 				});
 			}
 		</script>
 
-		<!-- Gestion des évènements -->
+		<!-- Calcul du trajet -->
 		<script>
-			var select = 0; //0: départ ; 1: intermédiaire ; 2: arrivée
-			
 			function calculate() {
-				if(parseInt($('#listeDepart option:selected').attr("value")) == 0 || parseInt($('#listeArrivee option:selected').attr("value"))) {
+				if(parseInt($('#listeDepart option:selected').attr("value")) != 0 && parseInt($('#listeArrivee option:selected').attr("value")) != 0) {
 					$( "#listeDepart" ).selectmenu( "disable" );
 					$( "#listeArrivee" ).selectmenu( "disable" );
 					
+					var aVisiter = [];
+					var found = false;
+					var i;
+
+					for(i=0; i<connections.length; i++) {
+						line[i][6] = 999999;
+						line[i][7] = 0;
+					}
+					aVisiter.unshift(parseInt($('#listeDepart option:selected').attr("value")));
+					while(aVisiter.length != 0 && found == false) {
+						courant = aVisiter.pop();
+						for(i=0; i<connections.length; i++) {
+							if(parseInt(connections[i][3]) == courant) {
+								if(parseInt(line[parseInt(connections[i][4])][6]) > parseInt(line[parseInt(connections[i][3])][6]) + connections[i][5]) {
+									line[parseInt(connections[i][4])][6] = line[connections[i][3]][6] + connections[i][5];
+									line[parseInt(connections[i][4])][7] = courant;
+									aVisiter.unshift(parseInt(connections[i][4]));
+								}
+							}
+						}
+					}
 					
+					for(i=0; i<line.length; i++)
+						alert("Value: "+line[i][6]+" | Last: "+line[i][7]);
 					
 					$( "#listeDepart" ).selectmenu( "enable" );
 					$( "#listeArrivee" ).selectmenu( "enable" );
