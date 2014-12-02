@@ -49,6 +49,7 @@
 
 		<div id="infobox"></div>
 		<div id="get" style="display: none;"></div>
+		<div id="tty"></div>
 
 		<!-- Gestion de la carte -->
 		<script>
@@ -199,8 +200,8 @@
 
 		<!-- Lecture des données -->
 		<script>
-			var line = [];
-			var connections = [];
+			var vertex = [0];
+			var connections = [0];
 			function lecture() {
 				$("#get").load("data.txt",function(data){
 					var i;
@@ -215,7 +216,7 @@
 					i++;
 					for(;i<tmp.length-1;i++)
 						connections.push(tmp[i].split(reg));
-					for(i=0; i<connections.length; i++) {
+					for(i=1; i<connections.length; i++) {
 						switch(connections[i][2]) {
 							case "V":
 								connections[i][5] = (parseInt(line[parseInt(connections[i][3])-1][2]) - parseInt(line[parseInt(connections[i][4])-1][2]))/20;
@@ -269,16 +270,18 @@
 					$( "#listeDepart" ).selectmenu( "disable" );
 					$( "#listeArrivee" ).selectmenu( "disable" );
 					
-					removeInt();
+					image.marqueurs.removeInt();
 					
 					var aVisiter = [];
 					var found = false;
 					var i;
 					var courant;
+					var temps = 0;
 
 					for(i=0; i<line.length; i++) {
 						line[i][6] = 999999;
 						line[i][7] = 0;
+						line[i][8] = 0;
 					}
 					line[parseInt($('#listeDepart option:selected').attr("value"))-1][6] = 0;
 					aVisiter.unshift(parseInt($('#listeDepart option:selected').attr("value")));
@@ -286,11 +289,11 @@
 						courant = aVisiter.pop();
 						for(i=0; i<connections.length; i++) {
 							if(parseInt(connections[i][3]) == courant) {
-								//alert(connections[i][4]+" && "+connections[i][3]+" ## "+line[parseInt(connections[i][4])-1][6]+" && "+line[parseInt(connections[i][3])-1][6]+" && "+connections[i][5]);
 								if(parseInt(line[parseInt(connections[i][4])-1][6]) > line[parseInt(connections[i][3])-1][6] + connections[i][5]) {
 
 									line[parseInt(connections[i][4])-1][6] = line[parseInt(connections[i][3])-1][6] + connections[i][5];
 									line[parseInt(connections[i][4])-1][7] = courant;
+									line[parseInt(connections[i][4])-1][8] = i+1;
 									aVisiter.unshift(parseInt(connections[i][4]));
 								}
 							}
@@ -306,12 +309,15 @@
 							courant = line[courant-1][7];
 							i++;
 						}
-						courant = line[parseInt($('#listeArrivee option:selected').attr("value"))-1][7];
-						while(courant != 0 && i > 0) {
-							image.marqueurs.add(line[courant-1][3], line[courant-1][4], courant, i--);
+						courant = parseInt($('#listeArrivee option:selected').attr("value"));
+						while(courant != 0) {
+							if(i > 0 && courant != parseInt($('#listeArrivee option:selected').attr("value"))) {
+								image.marqueurs.add(line[courant-1][3], line[courant-1][4], courant, i--);
+								temps += connections[line[courant][8]][5];
+								alert("Connexion "+line[courant][8]+" : "+connections[line[courant][8]][5]+"min");
+							}
 							courant = line[courant-1][7];
 						}
-						courant = parseInt($('#listeArrivee option:selected').attr("value"));
 					}
 					
 					$( "#listeDepart" ).selectmenu( "enable" );
