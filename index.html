@@ -31,6 +31,31 @@
 			<select name="listeArrivee" id="listeArrivee">
 				<option value="0"></option>
 			</select>
+			<div id="route">
+				<p class="Vertex"><span>35</span>Col du grand Renard</p>
+				<p class="Piste V"><span></span>Piste Verte</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Piste B"><span></span>Piste Bleu</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Piste R"><span></span>Piste Rouge</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Piste N"><span></span>Piste Noire</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Icone TPH"><img src="img/TPH.png" width="20"/>Téléphérique Blabla</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Icone TPH"><img src="img/TC.png" width="20"/>Télécabine Blabla</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Icone TPH"><img src="img/TS.png" width="20"/>Télésiège Blabla</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Icone TPH"><img src="img/TK.png" width="20"/>Tirefesse Blabla</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Icone TPH"><img src="img/BUS.png" width="20"/>Bus Blabla</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Icone TPH"><img src="img/KL.png" width="20"/>Trakskiing Blabla</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Icone TPH"><img src="img/SURF.png" width="20"/>Surf</p>
+				<p class="Vertex"><span>8</span>Col du Renard</p>
+			</div>
 		</aside>
 
 		<section role="main" id="main">
@@ -324,7 +349,6 @@
 							if(i > 0 && courant != parseInt($('#listeArrivee option:selected').attr("value"))) {
 								image.marqueurs.add(courant, i--);
 								temps += connections[vertices[courant][8]][5];
-								alert("Connexion "+vertices[courant][8]+" : "+connections[vertices[courant][8]][5]+"min");
 							}
 							courant = vertices[courant][7];
 						}

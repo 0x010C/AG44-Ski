@@ -57,33 +57,111 @@ header h1 {
 }
 
 /*
- * Menu latéral
+ * SIDEBAR
  */
 aside {
 	position: absolute;
 	right: 0px;
 	z-index: 100;
-	top: 20%;
+	top: 15%;
+	max-height: 60%;
 	border-top-left-radius: 22px;
 	border-bottom-left-radius: 22px;
 	background-color: #5c1b35;
-	padding: 6px;
+	width: 276px;
+	overflow: auto;
 }
 aside h1 {
 	color: #e2edb7;
 	font: 2em custom2, sans-serif;
 	text-shadow: rgba(226, 237, 183, 0.4) 0px 0px 7px;
 	text-align: center;
+	margin-left: 6px;
+	margin-top: 6px;
 }
 aside label {
 	display: inline-block;
 	margin-right: 5px;
+	margin-left: 6px;
 	color : #f6f6f6;
 	
 }
 aside select {
-	width: 220px;
+	width: 210px;
 }
+
+/*
+ * ROUTES
+ */
+
+#route {
+	margin-top: 15px;
+	font-family: "Trebuchet MS", Tahoma, sans-serif;
+	font-weight: bold;
+}
+
+.Vertex {
+	background: black;
+	height: 41px;
+	color: white;
+	font-size: 0.8em;
+}
+
+.Vertex span {
+	display: inline-block;
+	border: 3px white solid;
+	border-radius: 50%;
+	height: 30px;
+	width: 30px;
+	text-align: center;
+	margin-top: 5px;
+	margin-left: 8px;
+	margin-right: 8px;
+	padding-top: 4px;
+}
+
+.Piste, .Icone {
+	margin-top: 5px;
+	margin-bottom: 12px;
+	font-size: 0.8em;
+	color: #e2edb7;
+}
+
+.Icone img {
+	display: inline-block;
+	margin-left: 19px;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.Piste span {
+	display: inline-block;
+	border-radius: 50%;
+	border: 1px solid;
+	height: 12px;
+	width: 12px;
+	margin-left: 19px;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+.V span {
+	border: green;
+	background: green;
+}
+.B span {
+	border: blue;
+	background: blue;
+}
+.R span {
+	border: red;
+	background: red;
+}
+.N span {
+	border: black;
+	background: black;
+}
+
+
 
 /*
  * CORPS
