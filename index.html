@@ -25,12 +25,12 @@
 			<label for="listeDepart"><img src="img/iconD.png" /></label>
 			<select name="listeDepart" id="listeDepart">
 				<option value="0"></option>
-			</select>
-			<br />
+			</select><br />
 			<label for="listeArrivee"><img src="img/iconA.png" /></label>
 			<select name="listeArrivee" id="listeArrivee">
 				<option value="0"></option>
 			</select>
+			<p id="optionLink"><a href="javascript:openOption();">Options</a></p>
 			<div id="route">
 				<p class="Vertex"><span>#</span>Légende</p>
 				<p class="Piste V"><span></span>Piste Verte</p>
@@ -38,12 +38,27 @@
 				<p class="Piste R"><span></span>Piste Rouge</p>
 				<p class="Piste N"><span></span>Piste Noire</p>
 				<p class="Icone TPH"><img src="img/TPH.png" width="20"/>Téléphérique</p>
-				<p class="Icone TPH"><img src="img/TC.png" width="20"/>Télécabine</p>
-				<p class="Icone TPH"><img src="img/TS.png" width="20"/>Télésiège</p>
-				<p class="Icone TPH"><img src="img/TK.png" width="20"/>Tirefesse</p>
-				<p class="Icone TPH"><img src="img/BUS.png" width="20"/>Bus</p>
-				<p class="Icone TPH"><img src="img/KL.png" width="20"/>Trakskiing</p>
-				<p class="Icone TPH"><img src="img/SURF.png" width="20"/>Surf</p>
+				<p class="Icone TC"><img src="img/TC.png" width="20"/>Télécabine</p>
+				<p class="Icone TS"><img src="img/TS.png" width="20"/>Télésiège</p>
+				<p class="Icone TK"><img src="img/TK.png" width="20"/>Tirefesse</p>
+				<p class="Icone BUS"><img src="img/BUS.png" width="20"/>Bus</p>
+				<p class="Icone KL"><img src="img/KL.png" width="20"/>Trakskiing</p>
+				<p class="Icone SURF"><img src="img/SURF.png" width="20"/>Surf</p>
+			</div>
+			<div id="dialog-form" title="Select the path types">
+				<form>
+					<input type="checkbox" checked="checked" name="b1" id="b1" /><label for="b1" class="checkV"><span></span>Piste verte</label><br />
+					<input type="checkbox" checked="checked" name="b2" id="b2" /><label for="b2" class="checkB"><span></span>Piste bleu</label><br />
+					<input type="checkbox" checked="checked" name="b3" id="b3" /><label for="b3" class="checkR"><span></span>Piste rouge</label><br />
+					<input type="checkbox" checked="checked" name="b4" id="b4" /><label for="b4" class="checkN"><span></span>Piste noir</label><br />
+					<input type="checkbox" checked="checked" name="b5" id="b5" /><label for="b5" class="checkIcone"><img src="img/TPH.png" width="20"/>Téléphérique</label><br />
+					<input type="checkbox" checked="checked" name="b6" id="b6" /><label for="b6" class="checkIcone"><img src="img/TC.png" width="20"/>Télécabine</label><br />
+					<input type="checkbox" checked="checked" name="b7" id="b7" /><label for="b7" class="checkIcone"><img src="img/TS.png" width="20"/>Télésiège</label><br />
+					<input type="checkbox" checked="checked" name="b8" id="b8" /><label for="b8" class="checkIcone"><img src="img/TK.png" width="20"/>Tirefesse</label><br />
+					<input type="checkbox" checked="checked" name="b9" id="b9" /><label for="b9" class="checkIcone"><img src="img/BUS.png" width="20"/>Bus</label><br />
+					<input type="checkbox" checked="checked" name="b10" id="b10" /><label for="b10" class="checkIcone"><img src="img/KL.png" width="20"/>Trakskiing</label><br />
+					<input type="checkbox" checked="checked" name="b11" id="b11" /><label for="b11" class="checkIcone"><img src="img/SURF.png" width="20"/>Surf</label><br />
+				</form>
 			</div>
 		</aside>
 
@@ -55,9 +70,9 @@
 
 		<footer role="contentinfo" id="footer">
 			<ul>
-				<li><a href="javascript:lecture();">par Antoine Lamielle</a></li>
-				<li><a href="javascript:image.marqueurs.addStart(Number(prompt('x = ', '')),Number(prompt('y = ', '')),5);">licence GNU GPL v3</a></li>
-				<li><a href="javascript:image.marqueurs.removeStart();">fork me on Github</a></li>
+				<li><a href="">par Antoine Lamielle</a></li>
+				<li><a href="javascript:($('#b1').is(':checked')) ? 1: 0;">licence GNU GPL v3</a></li>
+				<li><a href="">fork me on Github</a></li>
 			</ul>
 		</footer>
 
@@ -282,8 +297,80 @@
 									connections[i][5] = 30;
 								break;
 						}
+						connections[i][6] = 0;
 					}
 				});
+			}
+		</script>
+		<!-- Gestion des options -->
+		<script>
+			var dialog;
+			function initDialogOption() {
+				$("#listeDepart").selectmenu({select: function( event, ui ) {
+					image.marqueurs.removeStart();
+					if(parseInt($('#listeDepart option:selected').attr("value")) > 0)
+						image.marqueurs.addStart(parseInt($('#listeDepart option:selected').attr("value")));
+					calculate();
+				}});
+				$("#listeArrivee").selectmenu({select: function( event, ui ) {
+					image.marqueurs.removeEnd();
+					if(parseInt($('#listeArrivee option:selected').attr("value")) > 0)
+						image.marqueurs.addEnd(parseInt($('#listeArrivee option:selected').attr("value")));
+					calculate();
+				}});
+				dialog = $( "#dialog-form" ).dialog({
+					autoOpen: false,
+					height: 300,
+					width: 350
+				});
+			}
+			
+			function openOption() {
+				dialog.dialog('open');
+			}
+			
+			function getOption() {
+				var i;
+				for(i=1; i<connections.length; i++) {
+					switch(connections[i][2]) {
+						case "TK":
+							connections[i][6] = ($('#b8').is(':checked')) ? 1: 0;
+							break;
+						case "TS":
+							connections[i][6] = ($('#b7').is(':checked')) ? 1: 0;
+							break;
+						case "TSD":
+							connections[i][6] = ($('#b7').is(':checked')) ? 1: 0;
+							break;
+						case "TC":
+							connections[i][6] = ($('#b6').is(':checked')) ? 1: 0;
+							break;
+						case "TPH":
+							connections[i][6] = ($('#b5').is(':checked')) ? 1: 0;
+							break;
+						case "BUS":
+							connections[i][6] = ($('#b9').is(':checked')) ? 1: 0;
+							break;
+						case "V":
+							connections[i][6] = ($('#b1').is(':checked')) ? 1: 0;
+							break;
+						case "B":
+							connections[i][6] = ($('#b2').is(':checked')) ? 1: 0;
+							break;
+						case "R":
+							connections[i][6] = ($('#b3').is(':checked')) ? 1: 0;
+							break;
+						case "N":
+							connections[i][6] = ($('#b4').is(':checked')) ? 1: 0;
+							break;
+						case "KL":
+							connections[i][6] = ($('#b10').is(':checked')) ? 1: 0;
+							break;
+						case "SURF":
+							connections[i][6] = ($('#b11').is(':checked')) ? 1: 0;
+							break;
+					}
+				}
 			}
 		</script>
 
@@ -296,6 +383,7 @@
 					
 					image.marqueurs.removeInt();
 					$("#route").text("");
+					getOption();
 					
 					/* Déclaration et Initialisation/reset des variables et tableaux  */
 					var aVisiter = [];
@@ -316,7 +404,7 @@
 					while(aVisiter.length != 0 && found == false) {
 						courant = aVisiter.pop();
 						for(i=1; i<connections.length; i++) {
-							if(connections[i][3] == courant) {
+							if(connections[i][3] == courant && connections[i][6] == 1) {
 								if(vertices[connections[i][4]][6] > vertices[connections[i][3]][6] + connections[i][5]) {
 
 									vertices[connections[i][4]][6] = vertices[connections[i][3]][6] + connections[i][5];
@@ -401,23 +489,11 @@
 		<!-- Lancement des modules -->
 		<script>
 			var image = new Image();
-
 			$(function() {
 				image.setDrag();
 				image.setWheel();
 				lecture();
-				$("#listeDepart").selectmenu({select: function( event, ui ) {
-					image.marqueurs.removeStart();
-					if(parseInt($('#listeDepart option:selected').attr("value")) > 0)
-						image.marqueurs.addStart(parseInt($('#listeDepart option:selected').attr("value")));
-					calculate();
-				}});
-				$("#listeArrivee").selectmenu({select: function( event, ui ) {
-					image.marqueurs.removeEnd();
-					if(parseInt($('#listeArrivee option:selected').attr("value")) > 0)
-						image.marqueurs.addEnd(parseInt($('#listeArrivee option:selected').attr("value")));
-					calculate();
-				}});
+				initDialogOption();
 			});
 
 			$(window).resize(function() {

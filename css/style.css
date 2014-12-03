@@ -70,6 +70,7 @@ aside {
 	background-color: #5c1b35;
 	width: 276px;
 	overflow: auto;
+	padding-left: 6px;
 }
 aside h1 {
 	color: #e2edb7;
@@ -79,7 +80,7 @@ aside h1 {
 	margin-left: 6px;
 	margin-top: 6px;
 }
-aside label {
+aside select  {
 	display: inline-block;
 	margin-right: 5px;
 	margin-left: 6px;
@@ -89,15 +90,29 @@ aside label {
 aside select {
 	width: 210px;
 }
+.ui-widget-content {
+	max-height: 200px;
+}
 
 /*
- * ROUTES
+ * ROUTES + DIALOGBOX
  */
 
-#route {
+#route, #optionLink a {
 	margin-top: 15px;
 	font-family: "Trebuchet MS", Tahoma, sans-serif;
 	font-weight: bold;
+}
+
+#optionLink {
+	text-align: center;
+}
+#optionLink a {
+	color: #e2edb7;
+	text-decoration: none;
+}
+#optionLink a:hover {
+	color: white;
 }
 
 .Vertex {
@@ -127,14 +142,14 @@ aside select {
 	color: #e2edb7;
 }
 
-.Icone img {
+.Icone img, .checkIcone img {
 	display: inline-block;
 	margin-left: 19px;
 	vertical-align: middle;
 	margin-right: 5px;
 }
 
-.Piste span {
+.Piste span, .checkV span, .checkB span, .checkR span, .checkN span {
 	display: inline-block;
 	border-radius: 50%;
 	border: 1px solid;
@@ -144,24 +159,26 @@ aside select {
 	margin-right: 5px;
 	vertical-align: middle;
 }
-.V span {
+.V span, .checkV span {
 	border: green;
 	background: green;
 }
-.B span {
+.B span, .checkB span {
 	border: blue;
 	background: blue;
 }
-.R span {
+.R span, .checkR span {
 	border: red;
 	background: red;
 }
-.N span {
+.N span, .checkN span {
 	border: black;
 	background: black;
 }
 
-
+body>.ui-widget-content {
+	max-height: 2000px;
+}
 
 /*
  * CORPS
@@ -170,11 +187,6 @@ section {
 	background: #498379;
 	overflow: hidden;
 	width: 100%;
-}
-
-.ui-helper-hidden-accessible {
-	background: yellow;
-	height: 0px;
 }
 
 section div {
@@ -244,16 +256,9 @@ footer ul li a:hover {
  * INFOBULLE
  */
 .ui-widget-content {
-	padding: 8px;
-	position: absolute;
-	z-index: 9999;
-	max-width: 300px;
-	max-height: 200px;
-	border: 1px solid #aaaaaa;
 	box-shadow: 0 0 5px #aaa;
 	border-radius: 4px;
-	background: #ffffff;
-	color: #222222;
+	border: 1px solid #aaaaaa;
 }
 
 .smaller {
