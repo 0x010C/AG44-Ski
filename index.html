@@ -37,13 +37,14 @@
 				<p class="Piste B"><span></span>Piste Bleu</p>
 				<p class="Piste R"><span></span>Piste Rouge</p>
 				<p class="Piste N"><span></span>Piste Noire</p>
-				<p class="Icone TPH"><img src="img/TPH.png" width="20"/>Téléphérique</p>
-				<p class="Icone TC"><img src="img/TC.png" width="20"/>Télécabine</p>
-				<p class="Icone TS"><img src="img/TS.png" width="20"/>Télésiège</p>
-				<p class="Icone TK"><img src="img/TK.png" width="20"/>Tirefesse</p>
-				<p class="Icone BUS"><img src="img/BUS.png" width="20"/>Bus</p>
-				<p class="Icone KL"><img src="img/KL.png" width="20"/>Trakskiing</p>
-				<p class="Icone SURF"><img src="img/SURF.png" width="20"/>Surf</p>
+				<p class="Icone"><img src="img/TPH.png" width="20"/>Téléphérique</p>
+				<p class="Icone"><img src="img/TC.png" width="20"/>Télécabine</p>
+				<p class="Icone"><img src="img/TSD.png" width="20"/>Télésiège Spécial</p>
+				<p class="Icone"><img src="img/TS.png" width="20"/>Télésiège</p>
+				<p class="Icone"><img src="img/TK.png" width="20"/>Tirefesse</p>
+				<p class="Icone"><img src="img/BUS.png" width="20"/>Bus</p>
+				<p class="Icone"><img src="img/KL.png" width="20"/>Trakskiing</p>
+				<p class="Icone"><img src="img/SURF.png" width="20"/>Surf</p>
 			</div>
 			<div id="dialog-form" title="Select the path types">
 				<form>
@@ -53,6 +54,7 @@
 					<input type="checkbox" checked="checked" name="b4" id="b4" /><label for="b4" class="checkN"><span></span>Piste noir</label><br />
 					<input type="checkbox" checked="checked" name="b5" id="b5" /><label for="b5" class="checkIcone"><img src="img/TPH.png" width="20"/>Téléphérique</label><br />
 					<input type="checkbox" checked="checked" name="b6" id="b6" /><label for="b6" class="checkIcone"><img src="img/TC.png" width="20"/>Télécabine</label><br />
+					<input type="checkbox" checked="checked" name="b12" id="b12" /><label for="b12" class="checkIcone"><img src="img/TSD.png" width="20"/>Télésiège Spécial</label><br />
 					<input type="checkbox" checked="checked" name="b7" id="b7" /><label for="b7" class="checkIcone"><img src="img/TS.png" width="20"/>Télésiège</label><br />
 					<input type="checkbox" checked="checked" name="b8" id="b8" /><label for="b8" class="checkIcone"><img src="img/TK.png" width="20"/>Tirefesse</label><br />
 					<input type="checkbox" checked="checked" name="b9" id="b9" /><label for="b9" class="checkIcone"><img src="img/BUS.png" width="20"/>Bus</label><br />
@@ -71,7 +73,7 @@
 		<footer role="contentinfo" id="footer">
 			<ul>
 				<li><a href="">par Antoine Lamielle</a></li>
-				<li><a href="javascript:($('#b1').is(':checked')) ? 1: 0;">licence GNU GPL v3</a></li>
+				<li><a href="">licence GNU GPL v3</a></li>
 				<li><a href="">fork me on Github</a></li>
 			</ul>
 		</footer>
@@ -324,7 +326,7 @@
 					width: 350
 				});
 				var i;
-				for(i=0; i<=11; i++)
+				for(i=0; i<=12; i++)
 					$("#b"+i).change(function(){calculate();});
 			}
 			
@@ -343,7 +345,7 @@
 							connections[i][6] = ($('#b7').is(':checked')) ? 1: 0;
 							break;
 						case "TSD":
-							connections[i][6] = ($('#b7').is(':checked')) ? 1: 0;
+							connections[i][6] = ($('#b12').is(':checked')) ? 1: 0;
 							break;
 						case "TC":
 							connections[i][6] = ($('#b6').is(':checked')) ? 1: 0;
