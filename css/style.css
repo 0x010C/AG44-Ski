@@ -70,7 +70,6 @@ aside {
 	background-color: #5c1b35;
 	width: 276px;
 	overflow: auto;
-	padding-left: 6px;
 }
 aside h1 {
 	color: #e2edb7;
@@ -86,6 +85,9 @@ aside select  {
 	margin-left: 6px;
 	color : #f6f6f6;
 	
+}
+aside>label {
+	margin-left: 6px;
 }
 aside select {
 	width: 210px;
@@ -120,6 +122,9 @@ aside select {
 	height: 41px;
 	color: white;
 	font-size: 0.8em;
+}
+.No {
+	background: red;
 }
 
 .Vertex span {
