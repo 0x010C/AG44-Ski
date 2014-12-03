@@ -32,29 +32,18 @@
 				<option value="0"></option>
 			</select>
 			<div id="route">
-				<p class="Vertex"><span>35</span>Col du grand Renard</p>
+				<p class="Vertex"><span>#</span>Légende</p>
 				<p class="Piste V"><span></span>Piste Verte</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
 				<p class="Piste B"><span></span>Piste Bleu</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
 				<p class="Piste R"><span></span>Piste Rouge</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
 				<p class="Piste N"><span></span>Piste Noire</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
-				<p class="Icone TPH"><img src="img/TPH.png" width="20"/>Téléphérique Blabla</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
-				<p class="Icone TPH"><img src="img/TC.png" width="20"/>Télécabine Blabla</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
-				<p class="Icone TPH"><img src="img/TS.png" width="20"/>Télésiège Blabla</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
-				<p class="Icone TPH"><img src="img/TK.png" width="20"/>Tirefesse Blabla</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
-				<p class="Icone TPH"><img src="img/BUS.png" width="20"/>Bus Blabla</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
-				<p class="Icone TPH"><img src="img/KL.png" width="20"/>Trakskiing Blabla</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
+				<p class="Icone TPH"><img src="img/TPH.png" width="20"/>Téléphérique</p>
+				<p class="Icone TPH"><img src="img/TC.png" width="20"/>Télécabine</p>
+				<p class="Icone TPH"><img src="img/TS.png" width="20"/>Télésiège</p>
+				<p class="Icone TPH"><img src="img/TK.png" width="20"/>Tirefesse</p>
+				<p class="Icone TPH"><img src="img/BUS.png" width="20"/>Bus</p>
+				<p class="Icone TPH"><img src="img/KL.png" width="20"/>Trakskiing</p>
 				<p class="Icone TPH"><img src="img/SURF.png" width="20"/>Surf</p>
-				<p class="Vertex"><span>8</span>Col du Renard</p>
 			</div>
 		</aside>
 
@@ -306,7 +295,9 @@
 					$( "#listeArrivee" ).selectmenu( "disable" );
 					
 					image.marqueurs.removeInt();
+					$("#route").text("");
 					
+					/* Déclaration et Initialisation/reset des variables et tableaux  */
 					var aVisiter = [];
 					var found = false;
 					var i;
@@ -318,6 +309,8 @@
 						vertices[i][7] = 0;
 						vertices[i][8] = 0;
 					}
+					
+					/* Application de l'Algorithme de calcul du plus court chemin */
 					vertices[parseInt($('#listeDepart option:selected').attr("value"))][6] = 0;
 					aVisiter.unshift(parseInt($('#listeDepart option:selected').attr("value")));
 					while(aVisiter.length != 0 && found == false) {
@@ -334,7 +327,8 @@
 							}
 						}
 					}
-					
+
+					/* Affichage du chemin calculé */
 					if(vertices[$('#listeArrivee option:selected').attr("value")][7] == 0)
 						alert("Aucun chemin n'a été trouvé entre les deux points");
 					else {
@@ -346,9 +340,53 @@
 						}
 						courant = parseInt($('#listeArrivee option:selected').attr("value"));
 						while(courant != 0) {
-							if(i > 0 && courant != parseInt($('#listeArrivee option:selected').attr("value"))) {
+							if(i == 0)
+								$("#route").prepend('<p class="Vertex"><span>D</span>'+vertices[courant][1]+'</p>');
+							else if(courant == parseInt($('#listeArrivee option:selected').attr("value")))
+								$("#route").prepend('<p class="Vertex"><span>A</span>'+vertices[courant][1]+'</p>');
+							else
+								$("#route").prepend('<p class="Vertex"><span>'+i+'</span>'+vertices[courant][1]+'</p>');
+							if(i > 0 && courant != parseInt($('#listeArrivee option:selected').attr("value")))
 								image.marqueurs.add(courant, i--);
-								temps += connections[vertices[courant][8]][5];
+							if(vertices[courant][8] != 0) {
+								switch(connections[vertices[courant][8]][2]) {
+									case "TK":
+										$("#route").prepend('<p class="Icone TK"><img src="img/TK.png" width="20"/ >'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "TS":
+										$("#route").prepend('<p class="Icone TS"><img src="img/TS.png" width="20"/ >'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "TSD":
+										$("#route").prepend('<p class="Icone TS"><img src="img/TS.png" width="20"/ >'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "TC":
+										$("#route").prepend('<p class="Icone TC"><img src="img/TC.png" width="20"/ >'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "TPH":
+										$("#route").prepend('<p class="Icone TPH"><img src="img/TPH.png" width="20"/ >'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "BUS":
+										$("#route").prepend('<p class="Icone BUS"><img src="img/BUS.png" width="20"/ >'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "V":
+										$("#route").prepend('<p class="Piste V"><span></span>'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "B":
+										$("#route").prepend('<p class="Piste B"><span></span>'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "R":
+										$("#route").prepend('<p class="Piste R"><span></span>'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "N":
+										$("#route").prepend('<p class="Piste N"><span></span>'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "KL":
+										$("#route").prepend('<p class="Icone KL"><img src="img/KL.png" width="20"/ >'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+									case "SURF":
+										$("#route").prepend('<p class="Icone SURF"><img src="img/SURF.png" width="20"/ >'+connections[vertices[courant][8]][1]+' ('+vertices[courant][8]+')</p>');
+										break;
+								}
 							}
 							courant = vertices[courant][7];
 						}

@@ -62,7 +62,7 @@ header h1 {
 aside {
 	position: absolute;
 	right: 0px;
-	z-index: 100;
+	z-index: 200;
 	top: 15%;
 	max-height: 60%;
 	border-top-left-radius: 22px;
