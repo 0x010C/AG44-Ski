@@ -129,7 +129,7 @@
 						function() {
 							var m = this;
 							$('#infobox').empty();
-							$("#infobox").html("<h3>Nom</h3><p>"+vertices[parseInt($(this).attr('class'))][1]+"</p><h3>Altitude</h3><p>"+vertices[parseInt($(this).attr('class'))][2]+"</p>");
+							$("#infobox").html("<h3>Name</h3><p>"+vertices[parseInt($(this).attr('class'))][1]+"</p><h3>Altitude</h3><p>"+vertices[parseInt($(this).attr('class'))][2]+"</p>");
 							$("#infobox").dialog({modal: false,resizable: false,position: { my: "left bottom", at: "right top", of: m}, width:100});
 							$("#infobox").closest(".ui-dialog").find(".ui-dialog-titlebar:first").hide();
 						}, function() {
