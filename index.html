@@ -141,10 +141,10 @@
 			 		this.update();
 			 	}
 			 	this.addStart = function(id) {
-			 		this.add(id, "D");
+			 		this.add(id, "S");
 			 	}
 			 	this.addEnd = function(id) {
-			 		this.add(id, "A");
+			 		this.add(id, "E");
 			 	}
 			 	this.removeInt = function() {
 			 		$("#container span").each(function(i) {
@@ -166,7 +166,7 @@
 			 	this.removeStart = function() {
 			 		var pos = -1;
 			 		$("#container span").each(function(i) {
-			 			if($(this).text() == "D") {
+			 			if($(this).text() == "S") {
 			 				pos = i;
 			 				$(this).remove();
 			 			}
@@ -184,7 +184,7 @@
 			 	this.removeEnd = function() {
 			 		var pos = -1;
 			 		$("#container span").each(function(i) {
-			 			if($(this).text() == "A") {
+			 			if($(this).text() == "E") {
 			 				pos = i;
 			 				$(this).remove();
 			 			}
@@ -381,8 +381,60 @@
 
 		<!-- Calcul du trajet -->
 		<script>
+			function algo() {				
+				/* Déclaration et Initialisation/reset des variables et tableaux  */
+				var aVisiter = [];
+				var found = false;
+				var i;
+				var courant;
+				var temps = 0;
+
+				for(i=1; i<vertices.length; i++) {
+					vertices[i][6] = 999999;
+					vertices[i][7] = 0;
+					vertices[i][8] = 0;
+				}
+				
+				/* Application de l'Algorithme de calcul du plus court chemin */
+				vertices[parseInt($('#listeDepart option:selected').attr("value"))][6] = 0;
+				aVisiter.unshift(parseInt($('#listeDepart option:selected').attr("value")));
+				while(aVisiter.length != 0 && found == false) {
+					courant = aVisiter.pop();
+					for(i=1; i<connections.length; i++) {
+						if(connections[i][3] == courant && connections[i][6] == 1) {
+							if(vertices[connections[i][4]][6] > vertices[connections[i][3]][6] + connections[i][5]) {
+
+								vertices[connections[i][4]][6] = vertices[connections[i][3]][6] + connections[i][5];
+								vertices[connections[i][4]][7] = courant;
+								vertices[connections[i][4]][8] = i;
+								aVisiter.unshift(connections[i][4]);
+							}
+						}
+					}
+				}
+			}
+		
 			function calculate() {
-				if(parseInt($('#listeDepart option:selected').attr("value")) != 0 && parseInt($('#listeArrivee option:selected').attr("value")) != 0) {
+				var i;
+				/* Si le point de départ n'est pas renseigné, on afficha la légende */
+				if(parseInt($('#listeDepart option:selected').attr("value")) == 0) {
+					$("#route").text("");
+					$("#route").append('<p class="Vertex"><span>#</span>Caption</p>');
+					$("#route").append('<p class="Piste V"><span></span>Green Piste</p>');
+					$("#route").append('<p class="Piste B"><span></span>Blue Piste</p>');
+					$("#route").append('<p class="Piste R"><span></span>Red Piste</p>');
+					$("#route").append('<p class="Piste N"><span></span>Black Piste</p>');
+					$("#route").append('<p class="Icone"><img src="img/TPH.png" width="20"/ >Telepheric</p>');
+					$("#route").append('<p class="Icone"><img src="img/TC.png" width="20"/ >Cabin</p>');
+					$("#route").append('<p class="Icone"><img src="img/TSD.png" width="20"/ >Special Chair Lift</p>');
+					$("#route").append('<p class="Icone"><img src="img/TS.png" width="20"/ >Chair Lift</p>');
+					$("#route").append('<p class="Icone"><img src="img/TK.png" width="20"/ >Ski Lift</p>');
+					$("#route").append('<p class="Icone"><img src="img/BUS.png" width="20"/ >Bus</p>');
+					$("#route").append('<p class="Icone"><img src="img/KL.png" width="20"/ >Trak Skiing</p>');
+					$("#route").append('<p class="Icone"><img src="img/SURF.png" width="20"/ >Surfing</p>');
+				}
+				/* Si seul le départ est renseigné, on affiche les points ateignables */
+				if(parseInt($('#listeDepart option:selected').attr("value")) != 0 && parseInt($('#listeArrivee option:selected').attr("value")) == 0) {
 					$( "#listeDepart" ).selectmenu( "disable" );
 					$( "#listeArrivee" ).selectmenu( "disable" );
 					
@@ -390,36 +442,36 @@
 					$("#route").text("");
 					getOption();
 					
-					/* Déclaration et Initialisation/reset des variables et tableaux  */
-					var aVisiter = [];
-					var found = false;
-					var i;
-					var courant;
-					var temps = 0;
+					algo();
 
+					$("#route").append('<p class="Vertex"><span>#</span>Reachable</p>');
 					for(i=1; i<vertices.length; i++) {
-						vertices[i][6] = 999999;
-						vertices[i][7] = 0;
-						vertices[i][8] = 0;
+						if(i == parseInt($('#listeDepart option:selected').attr("value")))
+							$("#route").append('<p class="Piste N"><span></span>'+vertices[i][1]+'</p>');
+						else if(vertices[i][7] == 0)
+							$("#route").append('<p class="Piste R"><span></span>'+vertices[i][1]+'</p>');
+						else
+							$("#route").append('<p class="Piste V"><span></span>'+vertices[i][1]+'</p>');
 					}
-					
-					/* Application de l'Algorithme de calcul du plus court chemin */
-					vertices[parseInt($('#listeDepart option:selected').attr("value"))][6] = 0;
-					aVisiter.unshift(parseInt($('#listeDepart option:selected').attr("value")));
-					while(aVisiter.length != 0 && found == false) {
-						courant = aVisiter.pop();
-						for(i=1; i<connections.length; i++) {
-							if(connections[i][3] == courant && connections[i][6] == 1) {
-								if(vertices[connections[i][4]][6] > vertices[connections[i][3]][6] + connections[i][5]) {
 
-									vertices[connections[i][4]][6] = vertices[connections[i][3]][6] + connections[i][5];
-									vertices[connections[i][4]][7] = courant;
-									vertices[connections[i][4]][8] = i;
-									aVisiter.unshift(connections[i][4]);
-								}
-							}
-						}
-					}
+					$( "#listeDepart" ).selectmenu( "enable" );
+					$( "#listeArrivee" ).selectmenu( "enable" );
+				}
+				/* Si le départ et l'arrivée sont renseignés, mais que ce sont le même point */
+				else if(parseInt($('#listeDepart option:selected').attr("value")) != 0 && $('#listeDepart option:selected').attr("value") == $('#listeArrivee option:selected').attr("value")) {
+					$("#route").text("");
+					$("#route").append('<p class="No Vertex"><span>#</span>It\'s the same point</p>');
+				}
+				/* Si le départ et l'arrivée sont renseignés, on calcul le plus court chemin */
+				else if(parseInt($('#listeDepart option:selected').attr("value")) != 0 && parseInt($('#listeArrivee option:selected').attr("value")) != 0) {
+					$( "#listeDepart" ).selectmenu( "disable" );
+					$( "#listeArrivee" ).selectmenu( "disable" );
+					
+					image.marqueurs.removeInt();
+					$("#route").text("");
+					getOption();
+					
+					algo();
 
 					/* Affichage du chemin calculé */
 					if(vertices[$('#listeArrivee option:selected').attr("value")][7] == 0)
@@ -434,9 +486,9 @@
 						courant = parseInt($('#listeArrivee option:selected').attr("value"));
 						while(courant != 0) {
 							if(i == 0)
-								$("#route").prepend('<p class="Vertex"><span>D</span>'+vertices[courant][1]+'</p>');
+								$("#route").prepend('<p class="Vertex"><span>S</span>'+vertices[courant][1]+'</p>');
 							else if(courant == parseInt($('#listeArrivee option:selected').attr("value")))
-								$("#route").prepend('<p class="Vertex"><span>A</span>'+vertices[courant][1]+'</p>');
+								$("#route").prepend('<p class="Vertex"><span>E</span>'+vertices[courant][1]+'</p>');
 							else
 								$("#route").prepend('<p class="Vertex"><span>'+i+'</span>'+vertices[courant][1]+'</p>');
 							if(i > 0 && courant != parseInt($('#listeArrivee option:selected').attr("value")))
